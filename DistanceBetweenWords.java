@@ -1,29 +1,50 @@
-package com.java;
+package com.prep;
 
 public class DistanceBetweenWords {
+	
+	private static final String document;
 
-	public static void main(String[] args) {
-		getMinDisatnce("geeks for geeks contribute practice", "geeks", "practice");
+    static {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("In publishing and graphic design, lorem ipsum is a filler text commonly used to demonstrate the graphic elements");
+        sb.append(" lorem ipsum text has been used in typesetting since the 1960s or earlier, when it was popularized by advertisements");
+        sb.append(" for Letraset transfer sheets. It was introduced to the Information Age in the mid-1980s by Aldus Corporation, which");
 
-	}
+        document = sb.toString();
+    }
 
-	public static int getMinDisatnce(String s, String w1, String w2) {
+    public static double shortestDistance(final String document, String word1, String word2) {
+        final String[] words = document.split("[,. ]");
 
-		String[] words = s.split("[,. ]");
-		int minDistance = words.length;
-		for(int i =0;i<words.length;i++) {
-			if(words[i].equals(w1)) {
-				for(int j=0;j<words.length;j++) {
-					if(words[j].equals(w2)) {
-						int distance = Math.abs(j-i-1);
-					minDistance = Math.min(minDistance, distance);
-					}
-				}
-			}
-		}
-		System.out.println(minDistance);
-		return minDistance;
+        int wordCount = 0;
+        double wordOneCount = 0;
+        double wordTwoCount = 0;
+        double shortestDistance = Double.MAX_VALUE;
+        for (String word : words) {
+            if (word.equalsIgnoreCase(word1)) wordOneCount = wordCount + (word.length() / 2d);
+            else if (word.equalsIgnoreCase(word2)) wordTwoCount = wordCount + (word.length() / 2d);
 
-	}
+            if (wordOneCount > 0 && wordTwoCount > 0) {
+                shortestDistance = Math.min(shortestDistance, Math.abs(wordTwoCount - wordOneCount));
+            }
+
+            wordCount += word.length() + 1;
+        }
+
+        System.out.println(String.format("Word1 : %s, word2: %s, distance: %s", word1, word2, shortestDistance));
+
+        return shortestDistance;
+    }
+
+    public static boolean pass() {
+        return shortestDistance(document, "and", "graphic") == 6d &&
+                shortestDistance(document, "transfer", "it") == 14d &&
+                shortestDistance(document, "Design", "filler") == 25d;
+    }
+
+    public static void main(String[] args) {
+        if (pass()) System.out.println("Pass");
+        else System.out.println("Some Fail");
+    }
 
 }
